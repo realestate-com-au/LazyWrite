@@ -1,5 +1,5 @@
 /*!
- * LazyWrite 1.2.1 (sha1: 4dad37cb515c671323bc5110f385585c39141301)
+ * LazyWrite 1.2.2 (sha1: 4dad37cb515c671323bc5110f385585c39141301)
  * (c) 2011 Shen Junru. MIT License.
  * http://github.com/shenjunru/LazyWrite
  */
@@ -17,6 +17,7 @@
 }(function(globalEval, window, document, isIE, autoHook, undef){
 
     var expose,
+        tagEntries = [],
         seed = 1,
         lazyType    = 'text/lazyjs',
         lazyPrefix  = 'lazy-holder-',
@@ -368,6 +369,7 @@
             } else if (-1 !== (index = html.indexOf('</' + name + '>'))) {
                 match = rHtmlTag.exec(html = html.slice(index + name.length + 3));
             } else {
+                tagEntries.push(name);
                 return (sHtmlTag = name);
             }
         }
@@ -375,7 +377,16 @@
 
     // check html is closed
     function tagClosed(html){
-        return !sHtmlTag || (-1 !== html.indexOf('</' + sHtmlTag + '>'));
+        if(!sHtmlTag) {
+            return true;
+        } else if(-1 !== html.indexOf('</' + sHtmlTag + '>')) {
+            tagEntries.pop();
+            sHtmlTag = tagEntries[tagEntries.length - 1];
+            if(tagEntries.length === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // lazy write
