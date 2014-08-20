@@ -1,5 +1,5 @@
 /*!
- * LazyWrite 1.2.2 (sha1: 4dad37cb515c671323bc5110f385585c39141301)
+ * LazyWrite 1.2.3 (sha1: 4dad37cb515c671323bc5110f385585c39141301)
  * (c) 2011 Shen Junru. MIT License.
  * http://github.com/shenjunru/LazyWrite
  */
@@ -389,9 +389,19 @@
         return false;
     }
 
-    // lazy write
     function lazyWrite(){
+        _lazyWrite(combine.call(arguments, ''));
+    }
+
+    function lazyWriteln(){
         var html = combine.call(arguments, '');
+        if (html) {
+            _lazyWrite(html + "\n");
+        }
+    }
+
+    // lazy write
+    function _lazyWrite(html){
         if (html) {
             if (tagOpened(html)) {
                 // html tag is not closed
@@ -424,7 +434,8 @@
 
     // replace original document.write functions by lazy write
     function hookWrite(){
-        document.writeln = document.write = lazyWrite;
+        document.writeln = lazyWriteln;
+        document.write = lazyWrite;
     }
 
     // handle srcipt load exception
