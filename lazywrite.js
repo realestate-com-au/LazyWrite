@@ -7,7 +7,7 @@
 (function(factory, globalEval, window, document, isIE){
     if ('function' === typeof define && define.amd) {
         // AMD. Register as an anonymous module.
-        define(function(){
+        define('lazywrite', [], function(){
             return factory(globalEval, window, document, isIE, false);
         });
     } else {
